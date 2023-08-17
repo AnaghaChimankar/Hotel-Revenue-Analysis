@@ -1,0 +1,65 @@
+-- Calculate total revenue for each hotel
+SELECT
+    h.hotel_id,
+    h.hotel_name,
+    SUM(t.amount) AS total_revenue
+FROM
+    hotels h
+JOIN
+    bookings b ON h.hotel_id = b.hotel_id
+JOIN
+    transactions t ON b.booking_id = t.booking_id
+GROUP BY
+    h.hotel_id, h.hotel_name
+ORDER BY
+    total_revenue DESC;
+
+-- Calculate average revenue per booking
+SELECT
+    h.hotel_id,
+    h.hotel_name,
+    AVG(t.amount) AS avg_revenue_per_booking
+FROM
+    hotels h
+JOIN
+    bookings b ON h.hotel_id = b.hotel_id
+JOIN
+    transactions t ON b.booking_id = t.booking_id
+GROUP BY
+    h.hotel_id, h.hotel_name
+ORDER BY
+    avg_revenue_per_booking DESC;
+
+-- Calculate monthly revenue trends
+SELECT
+    h.hotel_id,
+    h.hotel_name,
+    DATE_FORMAT(t.transaction_date, '%Y-%m') AS transaction_month,
+    SUM(t.amount) AS monthly_revenue
+FROM
+    hotels h
+JOIN
+    bookings b ON h.hotel_id = b.hotel_id
+JOIN
+    transactions t ON b.booking_id = t.booking_id
+GROUP BY
+    h.hotel_id, h.hotel_name, transaction_month
+ORDER BY
+    h.hotel_id, transaction_month;
+
+-- Calculate revenue distribution by payment method
+SELECT
+    h.hotel_id,
+    h.hotel_name,
+    t.payment_method,
+    SUM(t.amount) AS payment_method_revenue
+FROM
+    hotels h
+JOIN
+    bookings b ON h.hotel_id = b.hotel_id
+JOIN
+    transactions t ON b.booking_id = t.booking_id
+GROUP BY
+    h.hotel_id, h.hotel_name, t.payment_method
+ORDER BY
+    h.hotel_id, payment_method_revenue DESC;
